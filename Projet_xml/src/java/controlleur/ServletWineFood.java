@@ -26,7 +26,7 @@ import org.w3c.dom.NodeList;
  *
  * @author admin
  */
-public class servletWineFood extends HttpServlet {
+public class ServletWineFood extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
