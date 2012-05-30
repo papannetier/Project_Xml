@@ -88,7 +88,7 @@ public class ServletWineFood extends HttpServlet {
             for (int i = 0; i < wines.getLength(); i++) {
             Element wine = (Element) wines.item(i);
             out.println("<li>");
-            out.println(wine.getNodeValue());
+            out.println(wine.getFirstChild().getNextSibling().getTextContent());
             out.println("</li>");
             }
             /*for (int i = 0; i < wines.getLength(); i++) {
