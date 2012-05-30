@@ -10,12 +10,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Form;
+import org.restlet.representation.InputRepresentation;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 
 /**
  *
- * @author papou
+ * @author admin
  */
-public class ServletWineFood extends HttpServlet {
+public class servletWineFood extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -27,6 +38,9 @@ public class ServletWineFood extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    public static final String URL_WS = "http://services.wine.com/api/beta/service.svc/xml/catalog";
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -37,10 +51,10 @@ public class ServletWineFood extends HttpServlet {
              */
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ServletWineFood</title>");            
+            out.println("<title>Servlet servletWineFood</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ServletWineFood at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet servletWineFood at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } finally {            
@@ -61,7 +75,36 @@ public class ServletWineFood extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        PrintWriter out = response.getWriter();
+        response.setContentType("text/html; charset=utf-8");
+        ClientResource resource = null;
+        try {// Preparer l'appel au service Web distant
+            resource = new ClientResource(URL_WS + "?offset=0&size=5&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search=merlot%202007%20oregon");
+            // Recuperer la reponse en arbre DOM
+            Document xml = resource.get(Document.class);
+            out.println("<ul>");
+            NodeList wines = xml.getElementsByTagName("Region");
+            for (int i = 0; i < wines.getLength(); i++) {
+            Element wine = (Element) wines.item(i);
+            out.println("<li>");
+            out.println(wine.getNodeValue());
+            out.println("</li>");
+            }
+            /*for (int i = 0; i < wines.getLength(); i++) {
+                out.println("<li>");
+                Element wine = (Element) wines.item(i);
+                out.println(wine.getAttribute("prenom"));
+                out.println(" ");
+                out.println(wine.getAttribute("nom"));
+                out.println("</li>");
+            }*/
+            out.println("</ul>");
+        } catch (ResourceException exc) {
+            out.println("Erreur : " + exc.getStatus().getCode() + " ("
+                    + exc.getStatus().getDescription() + ") : "
+                    + resource.getResponseEntity().getText());
+        }
     }
 
     /**
@@ -76,7 +119,7 @@ public class ServletWineFood extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
     }
 
     /**
