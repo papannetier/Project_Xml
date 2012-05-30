@@ -21,7 +21,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
 /**
  *
  * @author admin
@@ -38,9 +37,8 @@ public class ServletWineFood extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     public static final String URL_WS = "http://services.wine.com/api/beta/service.svc/xml/catalog";
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -51,13 +49,13 @@ public class ServletWineFood extends HttpServlet {
              */
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet servletWineFood</title>");            
+            out.println("<title>Servlet servletWineFood</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet servletWineFood at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
-        } finally {            
+        } finally {
             out.close();
         }
     }
@@ -75,8 +73,14 @@ public class ServletWineFood extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        String action = request.getParameter("action");
+        if(action == null)
+        {
+            doInit(request,response);
+        }
         //processRequest(request, response);
-        PrintWriter out = response.getWriter();
+        /*PrintWriter out = response.getWriter();
         response.setContentType("text/html; charset=utf-8");
         ClientResource resource = null;
         try {// Preparer l'appel au service Web distant
@@ -86,25 +90,25 @@ public class ServletWineFood extends HttpServlet {
             out.println("<ul>");
             NodeList wines = xml.getElementsByTagName("Region");
             for (int i = 0; i < wines.getLength(); i++) {
-            Element wine = (Element) wines.item(i);
-            out.println("<li>");
-            out.println(wine.getNodeValue());
-            out.println("</li>");
-            }
-            /*for (int i = 0; i < wines.getLength(); i++) {
-                out.println("<li>");
                 Element wine = (Element) wines.item(i);
-                out.println(wine.getAttribute("prenom"));
-                out.println(" ");
-                out.println(wine.getAttribute("nom"));
+                out.println("<li>");
+                out.println(wine.getFirstChild().getNextSibling().getTextContent());
                 out.println("</li>");
             }*/
-            out.println("</ul>");
+        
+            /*
+             * for (int i = 0; i < wines.getLength(); i++) {
+             * out.println("<li>"); Element wine = (Element) wines.item(i);
+             * out.println(wine.getAttribute("prenom")); out.println(" ");
+             * out.println(wine.getAttribute("nom")); out.println("</li>"); }
+             */
+        
+         /* out.println("</ul>");
         } catch (ResourceException exc) {
             out.println("Erreur : " + exc.getStatus().getCode() + " ("
                     + exc.getStatus().getDescription() + ") : "
                     + resource.getResponseEntity().getText());
-        }
+        }*/
     }
 
     /**
@@ -120,6 +124,20 @@ public class ServletWineFood extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //processRequest(request, response);
+        String action = request.getParameter("action");
+        System.out.println("doPost");
+        System.out.println(action);
+        if (action != null) {
+            if (action.equals("redirectConsultation")) {
+                
+                System.out.println("redirection");
+               getServletContext().getRequestDispatcher("/vues/consultation.jsp").forward(request, response);
+            }
+            if (action.equals("redirectCreation")) {
+                getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
+            }
+        }
+
     }
 
     /**
@@ -131,4 +149,8 @@ public class ServletWineFood extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    public void doInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        getServletContext().getRequestDispatcher("/vues/accueil.jsp").forward(request, response);
+    }
 }
