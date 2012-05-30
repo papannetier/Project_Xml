@@ -80,7 +80,7 @@ public class ServletWineFood extends HttpServlet {
             doInit(request,response);
         }
         //processRequest(request, response);
-        /*PrintWriter out = response.getWriter();
+        PrintWriter out = response.getWriter();
         response.setContentType("text/html; charset=utf-8");
         ClientResource resource = null;
         try {// Preparer l'appel au service Web distant
@@ -90,25 +90,26 @@ public class ServletWineFood extends HttpServlet {
             out.println("<ul>");
             NodeList wines = xml.getElementsByTagName("Region");
             for (int i = 0; i < wines.getLength(); i++) {
+            Element wine = (Element) wines.item(i);
+            out.println("<li>");
+            out.println(wine.getFirstChild().getNextSibling().getTextContent());
+            out.println("</li>");
+            }
+            for (int i = 0; i < wines.getLength(); i++) {
+                out.println("<li>");
                 Element wine = (Element) wines.item(i);
                 out.println("<li>");
                 out.println(wine.getFirstChild().getNextSibling().getTextContent());
                 out.println("</li>");
-            }*/
+            }
         
-            /*
-             * for (int i = 0; i < wines.getLength(); i++) {
-             * out.println("<li>"); Element wine = (Element) wines.item(i);
-             * out.println(wine.getAttribute("prenom")); out.println(" ");
-             * out.println(wine.getAttribute("nom")); out.println("</li>"); }
-             */
-        
-         /* out.println("</ul>");
+       
+          out.println("</ul>");
         } catch (ResourceException exc) {
             out.println("Erreur : " + exc.getStatus().getCode() + " ("
                     + exc.getStatus().getDescription() + ") : "
                     + resource.getResponseEntity().getText());
-        }*/
+        }
     }
 
     /**

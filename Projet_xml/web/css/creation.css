@@ -1,0 +1,31 @@
+/* 
+    Document   : index
+    Created on : 30 mai 2012, 15:38:55
+    Author     : admin
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+#wine{
+    background-color: red;
+    float: left;
+    width: 50%
+        
+}
+
+#food{
+    background-color: blue;
+    float:right;
+    width:50%
+    
+}
+
+#search{
+    background-color: white;
+    width: 100%;
+    heigth:20px
+}
