@@ -4,8 +4,10 @@
  */
 package controlleur;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.text.Format;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,9 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+
+
 
 /**
  *
@@ -73,43 +78,15 @@ public class ServletWineFood extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        //processRequest(request, response);
         String action = request.getParameter("action");
         if(action == null)
         {
             doInit(request,response);
         }
-        //processRequest(request, response);
-        PrintWriter out = response.getWriter();
-        response.setContentType("text/html; charset=utf-8");
-        ClientResource resource = null;
-        try {// Preparer l'appel au service Web distant
-            resource = new ClientResource(URL_WS + "?offset=0&size=5&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search=merlot%202007%20oregon");
-            // Recuperer la reponse en arbre DOM
-            Document xml = resource.get(Document.class);
-            out.println("<ul>");
-            NodeList wines = xml.getElementsByTagName("Region");
-            for (int i = 0; i < wines.getLength(); i++) {
-            Element wine = (Element) wines.item(i);
-            out.println("<li>");
-            out.println(wine.getFirstChild().getNextSibling().getTextContent());
-            out.println("</li>");
-            }
-            for (int i = 0; i < wines.getLength(); i++) {
-                out.println("<li>");
-                Element wine = (Element) wines.item(i);
-                out.println("<li>");
-                out.println(wine.getFirstChild().getNextSibling().getTextContent());
-                out.println("</li>");
-            }
         
-       
-          out.println("</ul>");
-        } catch (ResourceException exc) {
-            out.println("Erreur : " + exc.getStatus().getCode() + " ("
-                    + exc.getStatus().getDescription() + ") : "
-                    + resource.getResponseEntity().getText());
-        }
+        
+
     }
 
     /**
@@ -130,17 +107,63 @@ public class ServletWineFood extends HttpServlet {
         System.out.println(action);
         if (action != null) {
             if (action.equals("redirectConsultation")) {
-                
-                System.out.println("redirection");
                getServletContext().getRequestDispatcher("/vues/consultation.jsp").forward(request, response);
             }
             if (action.equals("redirectCreation")) {
                 getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
             }
+            if (action.equals("rechercheWine")) {
+                doXML(request,response);
+            }
         }
 
     }
+    
+    public void doXML(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+                //PrintWriter out = response.getWriter();
+        //response.setContentType("text/html; charset=utf-8");
+        ClientResource resource = null;
+        HashMap<String,String> winesName = new HashMap<String,String>();
+        Element wine=null;
+        try {// Preparer l'appel au service Web distant
+            String search = request.getParameter("rechercheWine");
+            resource = new ClientResource(URL_WS + "?offset=0&size=5&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search="+search);
+            // Recuperer la reponse en arbre DOM
+            Document xml = resource.get(Document.class);
+            //out.println("<ul>");
+            NodeList wines = xml.getElementsByTagName("Product");
 
+            for (int i = 0; i < wines.getLength(); i++) {
+                wine = (Element) wines.item(i);
+                String name= (String) wine.getFirstChild().getNextSibling().getTextContent();
+                String id= (String) wine.getFirstChild().getTextContent();
+                
+                winesName.put(id,name);
+                //System.out.println(winesName.isEmpty());
+                /*out.println("<li>");
+                out.println(wine.getFirstChild().getNextSibling().getTextContent());
+                out.println("</li>");*/
+            }       
+
+            //out.println("</ul>");
+        } catch (ResourceException exc) {
+            System.out.println("Erreur : " + exc.getStatus().getCode() + " ("
+                    + exc.getStatus().getDescription() + ") : "
+                    + resource.getResponseEntity().getText());
+            /*out.println("Erreur : " + exc.getStatus().getCode() + " ("
+                    + exc.getStatus().getDescription() + ") : "
+                    + resource.getResponseEntity().getText());*/
+        }
+        
+        request.setAttribute("winesName", winesName);
+        getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
+        
+       
+    }
+    
+     
     /**
      * Returns a short description of the servlet.
      *

@@ -4,9 +4,17 @@
         <servlet-name>ServletWineFood</servlet-name>
         <servlet-class>controlleur.ServletWineFood</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletReponseAJAX</servlet-name>
+        <servlet-class>controlleur.ServletReponseAJAX</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletWineFood</servlet-name>
         <url-pattern>/ServletWineFood</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletReponseAJAX</servlet-name>
+        <url-pattern>/ServletReponseAJAX</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
