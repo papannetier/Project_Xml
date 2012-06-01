@@ -63,13 +63,17 @@ public class ServletReponseAJAX extends HttpServlet {
             throws ServletException, IOException {
         //processRequest(request, response);
         String id =null;
+        String name=null;
+        String nameRegion=null;
         id = request.getParameter("id");
+        name = request.getParameter("name");
+        nameRegion = request.getParameter("nameRegion");
         
         response.setContentType("text/xml");
         response.setHeader("Cache-Control", "no-cache");
 
-
-        response.getWriter().write(id);
+        String todo=id+" "+name+" "+nameRegion;
+        response.getWriter().write(todo);
     }
 
     /**

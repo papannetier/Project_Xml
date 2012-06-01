@@ -11,8 +11,10 @@
 
 
 <%
-    HashMap<String, String> winesName = null;
-    winesName = (HashMap<String, String>) request.getAttribute("winesName");
+    HashMap<String, String []> winesTotal = null;
+    String foodList= null;
+    winesTotal = (HashMap<String, String []>) request.getAttribute("winesTotal");
+    foodList=(String) request.getAttribute("foodList");
 
 %>
 <!DOCTYPE html>
@@ -35,14 +37,19 @@
             if(requete == null){
                 alert("Erreur de création de HttpRequest");
             }
+
             
         
         
-            function getSearchWine(id){
+            function getSearchWine(id,tab){
                 var searchWine= document.getElementById("rechercheWine").value;
+                
+                var id=id;
+                var name=tab[0];
+                var nameRegion=tab[1];
             
                 //var url="http://services.wine.com/api/beta/service.svc/xml/catalog?offset=0&size=1&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search="+searchWine;
-                var url="ServletReponseAJAX?id=" + escape(id);            
+                var url="ServletReponseAJAX?id=" + escape(id) +"&name=" + escape(name)+"&nameRegion="+ escape(nameRegion);            
                 requete.open("GET",url,true);
                 requete.onreadystatechange=actualiserPage;
                 requete.send(null);
@@ -57,25 +64,24 @@
         </script>
         <script type="text/javascript" >
             function getSearchFood(data) {
+              
 
                 var sfo = data.recipes;
-//                var divTag = document.createElement('li');
                 var tab = new Array();
                 for (var i=0, j=data.count;i<j;i++){
                     console.log(sfo[i]);
                     tab.push(sfo[i].title,sfo[i].source_img);
-//                    alert(sfo[i].title);
-//    divTag.innerHTML += sfo[i].title;
-   
                 } 
                 console.log(tab);
                 return tab;
-//              return  document.getElementsByTagName('ul').appendChild(divTag);
             }
+            
         </script>
-        <script type="text/javascript" src="http://api.punchfork.com/recipes?key=3f748f947e84fcda&q=<%= request.getAttribute("foodList") %>&count=5&jsonp=getSearchFood">
+   
+        <script type="text/javascript" src="http://api.punchfork.com/recipes?key=3f748f947e84fcda&q=<%=foodList%>&count=5&jsonp=getSearchFood">
 
         </script>
+
         <script  type="text/javascript">
                 var getSearchFoodd = function(){
                     var searchFood = document.getElementById("rechercheFood").value;
@@ -112,6 +118,7 @@
     </head>
     <body>
 
+       
         <div id="wine">
             <h1>WINE</h1>
             <div id="search">
@@ -128,14 +135,14 @@
             <div id="gg">
                 <h3>résultat</h3> 
                 <%
-                    if (!(winesName == null)) {
+                    if (!(winesTotal == null)) {
                 %><table>
                     <tr>
-                        <th>Nom des vins</th>
+                        <th>Nom des vins </th>
                     </tr>
 
-                    <%for (String mapKey : winesName.keySet()) {
-                            out.println("<tr><td onclick='getSearchWine(" + mapKey + ")'>" + winesName.get(mapKey) + "</td></tr>");
+                    <%for (String mapKey : winesTotal.keySet()) {
+                            out.println("<tr><td onclick='getSearchWine("+ mapKey +","+ winesTotal.get(mapKey) + ")'>" + winesTotal.get(mapKey)[0] + "</td></tr>");
                         }%>
                 </table>
                 <%}%>  
@@ -173,7 +180,7 @@
             <div id="dd">
                 <h3>résultat</h3>
                 <div >
-                    <ul id="field_champ" name ="field_champ"><li>Test</li></ul>
+                    <ul id="field_champ"><li><%= foodList %></li></ul>
                 </div>
             </div>
         </div>

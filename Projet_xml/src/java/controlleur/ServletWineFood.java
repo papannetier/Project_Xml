@@ -126,8 +126,9 @@ public class ServletWineFood extends HttpServlet {
         //PrintWriter out = response.getWriter();
         //response.setContentType("text/html; charset=utf-8");
         ClientResource resource = null;
-        HashMap<String, String> winesName = new HashMap<String, String>();
+        HashMap<String, String []> winesTotal = new HashMap<String, String []>();
         Element wine = null;
+        String [] attributsProduit =null;
         try {// Preparer l'appel au service Web distant
             String search = request.getParameter("rechercheWine");
             resource = new ClientResource(URL_WS + "?offset=0&size=5&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search=" + search);
@@ -139,17 +140,24 @@ public class ServletWineFood extends HttpServlet {
 
             for (int i = 0; i < wines.getLength(); i++) {
                 wine = (Element) wines.item(i);
-                String name = (String) wine.getFirstChild().getNextSibling().getTextContent();
+                
                 String id = (String) wine.getFirstChild().getTextContent();
+                String name = (String) wine.getFirstChild().getNextSibling().getTextContent();
+                String nameRegion = (String) wine.getFirstChild().getNextSibling().getNextSibling().getNextSibling().getLastChild().getFirstChild().getNextSibling().getTextContent();
+                
+                attributsProduit= new String [10];
+                
+                attributsProduit[0]=name;
+                attributsProduit[1]=nameRegion;          
+                
+                winesTotal.put(id, attributsProduit);
+                
 
-                winesName.put(id, name);
-                //System.out.println(winesName.isEmpty());
-                /*
-                 * out.println("<li>");
-                 * out.println(wine.getFirstChild().getNextSibling().getTextContent());
-                 * out.println("</li>");
-                 */
+
             }
+
+            System.out.println(winesTotal.get("99956")[0]);
+             System.out.println(winesTotal.get("109970")[0]);
 
             //out.println("</ul>");
         } catch (ResourceException exc) {
@@ -163,7 +171,7 @@ public class ServletWineFood extends HttpServlet {
              */
         }
 
-        request.setAttribute("winesName", winesName);
+        request.setAttribute("winesTotal", winesTotal);
         getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
 
     }
@@ -171,20 +179,19 @@ public class ServletWineFood extends HttpServlet {
     public void doJSON(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-         ClientResource resource = null;
-//        HashMap<String, String> winesName = new HashMap<String, String>();
+        ClientResource resource = null;
+        //HashMap<String, String> winesName = new HashMap<String, String>();
         Element food = null;
+        String searchFood=null;
         try {// Preparer l'appel au service Web distant
-            String search = request.getParameter("rechercheFood");
-            resource = new ClientResource(URL_WSF + "?key=3f748f947e84fcda&q="+search+"&count=5");
+            searchFood = request.getParameter("rechercheFood");
+            resource = new ClientResource(URL_WSF + "?key=3f748f947e84fcda&q="+searchFood+"&count=5");
             // Recuperer la reponse en arbre DOM
-            System.out.println("test "+resource.get());
             Document json = resource.get(Document.class);
-            System.out.println("test2 "+json);
-        } catch(Exception e){}
-        String searchFood = request.getParameter("rechercheFood");
-//        System.out.println(searchFood);
-         request.setAttribute("foodList", searchFood);
+        } catch(Exception e){
+        }
+
+        request.setAttribute("foodList", searchFood);
         getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
 
     }
