@@ -11,19 +11,18 @@
 
 
 <%
-HashMap<String,String> winesName=null;
-winesName = (HashMap<String,String>) request.getAttribute("winesName");
+    HashMap<String, String> winesName = null;
+    winesName = (HashMap<String, String>) request.getAttribute("winesName");
 
 %>
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="/Projet_xml/css/creation.css" type="text/css" />
-        
-        
-        <script language="javascript" type="text/javascript">
+        <script src="/Projet_xml/js/prototype.js" type="text/javascript" ></script>
+
+        <script type="text/javascript">
             // le code suivant n'est pas mis dans une fonction pour que dès le chargement de la page, il s'exécute. 
             var requete=null;
        
@@ -39,25 +38,68 @@ winesName = (HashMap<String,String>) request.getAttribute("winesName");
             
         
         
-        function getSearchWine(id){
-            var searchWine= document.getElementById("rechercheWine").value;
+            function getSearchWine(id){
+                var searchWine= document.getElementById("rechercheWine").value;
             
-            //var url="http://services.wine.com/api/beta/service.svc/xml/catalog?offset=0&size=1&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search="+searchWine;
-            var url="ServletReponseAJAX?id=" + escape(id);            
-            requete.open("GET",url,true);
-            requete.onreadystatechange=actualiserPage;
-            requete.send(null);
-        }
-        function actualiserPage(){
-            //alert(requete.readyState);
-            //alert(requete.status);
-            if (requete.readyState == 4){
-                alert(requete.responseText);
+                //var url="http://services.wine.com/api/beta/service.svc/xml/catalog?offset=0&size=1&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search="+searchWine;
+                var url="ServletReponseAJAX?id=" + escape(id);            
+                requete.open("GET",url,true);
+                requete.onreadystatechange=actualiserPage;
+                requete.send(null);
             }
-        }
+            function actualiserPage(){
+                //alert(requete.readyState);
+                //alert(requete.status);
+                if (requete.readyState == 4){
+                    alert(requete.responseText);
+                }
+
         </script>
-        
-        
+        <script type="text/javascript" >
+            function getSearchFood(data) {
+
+                var sfo = data.recipes;
+                for (var i=0, j=data.count;i<j;i++){
+                    console.log(sfo[i]);
+                }
+                
+            }
+        </script>
+        <script type="text/javascript" src="http://api.punchfork.com/recipes?key=3f748f947e84fcda&q=<%= request.getAttribute("foodList") %>&count=5&jsonp=getSearchFood">
+
+        </script>
+        <script  type="text/javascript">
+                var getSearchFoodd = function(){
+                    var searchFood = document.getElementById("rechercheFood").value;
+                    alert(searchFood);
+                    var url = "http://api.punchfork.com/recipes?key=3f748f947e84fcda&q="+searchFood+"&count=5&jsonp=parseResponse";
+                    alert(url);
+                    var myAjax = new Ajax.Request(url,{
+                        on401: function() {
+                        },
+                        on404: function() {
+                        },
+                        onComplete: function(request) {
+                            
+                           console.log("ok");
+                            alert("ok");
+                            //alert(this.header('Content-type'));
+                            //if(this.header('Content-type') == "application/json"){
+                                alert("json");
+                            
+                            var foods = request.responseText.evalJSON();
+                            console.log(foods);
+                            alert(foods);
+                        //}
+                        } , // onSuccess
+                        onFailure: function(){
+                        }
+                    }
+                );
+                };
+        </script>
+
+
         <title>Page d'association wine-food</title>
     </head>
     <body>
@@ -77,19 +119,19 @@ winesName = (HashMap<String,String>) request.getAttribute("winesName");
 
             <div id="gg">
                 <h3>résultat</h3> 
-                        <%
-                if (!(winesName == null)) {
-                  %><table>
-                         <tr>
-                             <th>Nom des vins</th>
-                         </tr>
-                             
+                <%
+                    if (!(winesName == null)) {
+                %><table>
+                    <tr>
+                        <th>Nom des vins</th>
+                    </tr>
+
                     <%for (String mapKey : winesName.keySet()) {
-                        out.println("<tr><td onclick='getSearchWine("+mapKey+")'>" + winesName.get(mapKey) +"</td></tr>");
-                    }%>
-                    </table>
-               <%}%>  
-       
+                            out.println("<tr><td onclick='getSearchWine(" + mapKey + ")'>" + winesName.get(mapKey) + "</td></tr>");
+                        }%>
+                </table>
+                <%}%>  
+
             </div>
             <div id="gd">
                 <h3>sélection</h3>   
@@ -105,25 +147,25 @@ winesName = (HashMap<String,String>) request.getAttribute("winesName");
         </div>
 
         <div id="food">
-            
-                <h1>FOOD</h1>
-                <div id="search">
-                    <h2>recherche</h2>
-                    <form action="ServletWineFood" method="post">
-                        <input type ="text" name="rechercheFood" id="rechercheFood" value=""/>
-                        <input type="submit" value="Rechercher"/>
-                        <input type="hidden" name="action" value="rechercheFood"/>
-                    </form>
-                </div>
 
-            
-                <div id="dg">
-                  <h3>sélection</h3>  
-                </div>
-                <div id="dd">
-                    <h3>résultat</h3>
-                </div>
-    </div>
+            <h1>FOOD</h1>
+            <div id="search">
+                <form action="ServletWineFood" method="post">
+                <h2>recherche</h2>
+                <input type ="text" name="rechercheFood" id="rechercheFood" value=""/>
+                <input type="button" value="Rechercher" onclick="getSearchFood();"/>
+                <input type="hidden" name="action" value="rechercherFood"/>
+                </form>
+            </div>
 
-</body>
+
+            <div id="dg">
+                <h3>sélection</h3>  
+            </div>
+            <div id="dd">
+                <h3>résultat</h3>
+            </div>
+        </div>
+
+    </body>
 </html>

@@ -8,7 +8,10 @@ import java.io.*;
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,9 +25,6 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-
-
 
 /**
  *
@@ -43,6 +43,7 @@ public class ServletWineFood extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     public static final String URL_WS = "http://services.wine.com/api/beta/service.svc/xml/catalog";
+    public static final String URL_WSF = "http://api.punchfork.com/recipes?key=3f748f947e84fcda";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -80,12 +81,9 @@ public class ServletWineFood extends HttpServlet {
             throws ServletException, IOException {
         //processRequest(request, response);
         String action = request.getParameter("action");
-        if(action == null)
-        {
-            doInit(request,response);
+        if (action == null) {
+            doInit(request, response);
         }
-        
-        
 
     }
 
@@ -107,63 +105,89 @@ public class ServletWineFood extends HttpServlet {
         System.out.println(action);
         if (action != null) {
             if (action.equals("redirectConsultation")) {
-               getServletContext().getRequestDispatcher("/vues/consultation.jsp").forward(request, response);
+                getServletContext().getRequestDispatcher("/vues/consultation.jsp").forward(request, response);
             }
             if (action.equals("redirectCreation")) {
                 getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
             }
             if (action.equals("rechercheWine")) {
-                doXML(request,response);
+                doXML(request, response);
+            }
+            if (action.equals("rechercheFood")) {
+                doJSON(request, response);
             }
         }
 
     }
-    
+
     public void doXML(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-                //PrintWriter out = response.getWriter();
+
+        //PrintWriter out = response.getWriter();
         //response.setContentType("text/html; charset=utf-8");
         ClientResource resource = null;
-        HashMap<String,String> winesName = new HashMap<String,String>();
-        Element wine=null;
+        HashMap<String, String> winesName = new HashMap<String, String>();
+        Element wine = null;
         try {// Preparer l'appel au service Web distant
             String search = request.getParameter("rechercheWine");
-            resource = new ClientResource(URL_WS + "?offset=0&size=5&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search="+search);
+            resource = new ClientResource(URL_WS + "?offset=0&size=5&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search=" + search);
             // Recuperer la reponse en arbre DOM
+            System.out.println("test "+resource.get());
             Document xml = resource.get(Document.class);
             //out.println("<ul>");
             NodeList wines = xml.getElementsByTagName("Product");
 
             for (int i = 0; i < wines.getLength(); i++) {
                 wine = (Element) wines.item(i);
-                String name= (String) wine.getFirstChild().getNextSibling().getTextContent();
-                String id= (String) wine.getFirstChild().getTextContent();
-                
-                winesName.put(id,name);
+                String name = (String) wine.getFirstChild().getNextSibling().getTextContent();
+                String id = (String) wine.getFirstChild().getTextContent();
+
+                winesName.put(id, name);
                 //System.out.println(winesName.isEmpty());
-                /*out.println("<li>");
-                out.println(wine.getFirstChild().getNextSibling().getTextContent());
-                out.println("</li>");*/
-            }       
+                /*
+                 * out.println("<li>");
+                 * out.println(wine.getFirstChild().getNextSibling().getTextContent());
+                 * out.println("</li>");
+                 */
+            }
 
             //out.println("</ul>");
         } catch (ResourceException exc) {
             System.out.println("Erreur : " + exc.getStatus().getCode() + " ("
                     + exc.getStatus().getDescription() + ") : "
                     + resource.getResponseEntity().getText());
-            /*out.println("Erreur : " + exc.getStatus().getCode() + " ("
-                    + exc.getStatus().getDescription() + ") : "
-                    + resource.getResponseEntity().getText());*/
+            /*
+             * out.println("Erreur : " + exc.getStatus().getCode() + " (" +
+             * exc.getStatus().getDescription() + ") : " +
+             * resource.getResponseEntity().getText());
+             */
         }
-        
+
         request.setAttribute("winesName", winesName);
         getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
-        
-       
+
     }
-    
-     
+
+    public void doJSON(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+         ClientResource resource = null;
+//        HashMap<String, String> winesName = new HashMap<String, String>();
+        Element food = null;
+        try {// Preparer l'appel au service Web distant
+            String search = request.getParameter("rechercheFood");
+            resource = new ClientResource(URL_WSF + "?key=3f748f947e84fcda&q="+search+"&count=5");
+            // Recuperer la reponse en arbre DOM
+            System.out.println("test "+resource.get());
+            Document json = resource.get(Document.class);
+            System.out.println("test2 "+json);
+        } catch(Exception e){}
+        String searchFood = request.getParameter("rechercheFood");
+         request.setAttribute("foodList", searchFood);
+        getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
+
+    }
+
     /**
      * Returns a short description of the servlet.
      *
@@ -173,8 +197,8 @@ public class ServletWineFood extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-    public void doInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+    public void doInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         getServletContext().getRequestDispatcher("/vues/accueil.jsp").forward(request, response);
     }
 }
