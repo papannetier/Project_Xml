@@ -117,9 +117,10 @@
         <title>Page d'association wine-food</title>
     </head>
     <body>
-
+      
        
         <div id="wine">
+        
             <h1>WINE</h1>
             <div id="search">
                 <h2>recherche</h2>
@@ -142,7 +143,7 @@
                     </tr>
 
                     <%for (String mapKey : winesTotal.keySet()) {
-                            out.println("<tr><td onclick='getSearchWine("+ mapKey +","+ winesTotal.get(mapKey) + ")'>" + winesTotal.get(mapKey)[0] + "</td></tr>");
+                            out.println("<tr><td onclick='getSearchWine("+ mapKey +","+ winesTotal.get(mapKey) + ")'>" + winesTotal.get(mapKey)[0] + winesTotal.get(mapKey)[2] +"</td></tr>");
                         }%>
                 </table>
                 <%}%>  
