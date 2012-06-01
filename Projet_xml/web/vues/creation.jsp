@@ -59,10 +59,18 @@
             function getSearchFood(data) {
 
                 var sfo = data.recipes;
+//                var divTag = document.createElement('li');
+                var tab = new Array();
                 for (var i=0, j=data.count;i<j;i++){
                     console.log(sfo[i]);
-                }
-                
+                    tab.push(sfo[i].title,sfo[i].source_img);
+//                    alert(sfo[i].title);
+//    divTag.innerHTML += sfo[i].title;
+   
+                } 
+                console.log(tab);
+                return tab;
+//              return  document.getElementsByTagName('ul').appendChild(divTag);
             }
         </script>
         <script type="text/javascript" src="http://api.punchfork.com/recipes?key=3f748f947e84fcda&q=<%= request.getAttribute("foodList") %>&count=5&jsonp=getSearchFood">
@@ -140,7 +148,7 @@
         </div>
 
         <div id="associer">
-            <form action="ServletWineFood" method="get">
+            <form action="ServletWineFood" method="post">
                 <input type="submit" value="Associer"/>
                 <input type="hidden" name="action" value="associer"/>
             </form>
@@ -153,8 +161,8 @@
                 <form action="ServletWineFood" method="post">
                 <h2>recherche</h2>
                 <input type ="text" name="rechercheFood" id="rechercheFood" value=""/>
-                <input type="button" value="Rechercher" onclick="getSearchFood();"/>
-                <input type="hidden" name="action" value="rechercherFood"/>
+                <input type="submit" value="Rechercher"/>
+                <input type="hidden" name="action" value="rechercheFood"/>
                 </form>
             </div>
 
@@ -164,6 +172,9 @@
             </div>
             <div id="dd">
                 <h3>résultat</h3>
+                <div >
+                    <ul id="field_champ" name ="field_champ"><li>Test</li></ul>
+                </div>
             </div>
         </div>
 

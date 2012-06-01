@@ -183,6 +183,7 @@ public class ServletWineFood extends HttpServlet {
             System.out.println("test2 "+json);
         } catch(Exception e){}
         String searchFood = request.getParameter("rechercheFood");
+//        System.out.println(searchFood);
          request.setAttribute("foodList", searchFood);
         getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
 
