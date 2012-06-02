@@ -11,10 +11,10 @@
 
 
 <%
-    HashMap<String, String []> winesTotal = null;
-    String foodList= null;
-    winesTotal = (HashMap<String, String []>) session.getAttribute("winesTotal");
-    foodList=(String) request.getAttribute("foodList");
+    HashMap<String, String[]> winesTotal = null;
+    String foodList = null;
+    winesTotal = (HashMap<String, String[]>) session.getAttribute("winesTotal");
+    foodList = (String) request.getAttribute("foodList");
 
 
 %>
@@ -69,7 +69,7 @@
                     document.getElementById("nameRegion").value=tabAttributs[1];
                     
                     document.getElementById("imageVin").setAttribute("src",tabAttributs[2]);
-
+                    document.getElementById("gd").style.display = "block";
                     
                 }
             }
@@ -78,62 +78,34 @@
         <script type="text/javascript" >
             function getSearchFood(data) {
               
-                
                 var sfo = data.recipes;
+                console.log(data);
                 var tab = new Array();
                 for (var i=0, j=data.count;i<j;i++){
                     console.log(sfo[i]);
+                    var divTag = document.createElement('tr');
                     tab.push(sfo[i].title,sfo[i].source_img);
+                    //                    alert(sfo[i].title);
+                    divTag.setAttribute('onclick', 'recupPhoto(\''+sfo[i].thumb+'\', \''+sfo[i].rating +'\', \''+sfo[i].title +'\');');
+                    divTag.innerHTML += '<td id="'+i+'">'+sfo[i].title+'</td>';
+                    document.getElementById("field_champ").appendChild(divTag);
                 } 
                 console.log(tab);
-                return tab;
+                return tab;         
+            }
+            function recupPhoto(url,rating,title){
+                document.getElementById('hide').style.display = 'block';
+                document.getElementById('photo').innerHTML = '<img src="'+url+'" />';
+                document.getElementById('title').innerHTML = '<label>'+title+'</label>';
+                document.getElementById('rating').innerHTML = '<label style="float:left;">'+rating+'</label>';
             }
             
         </script>
-   
-        <script type="text/javascript" src="http://api.punchfork.com/recipes?key=3f748f947e84fcda&q=<%=foodList%>&count=5&jsonp=getSearchFood">
-
-        </script>
-
-        <script  type="text/javascript">
-                var getSearchFoodd = function(){
-                    var searchFood = document.getElementById("rechercheFood").value;
-                    alert(searchFood);
-                    var url = "http://api.punchfork.com/recipes?key=3f748f947e84fcda&q="+searchFood+"&count=5&jsonp=parseResponse";
-                    alert(url);
-                    var myAjax = new Ajax.Request(url,{
-                        on401: function() {
-                        },
-                        on404: function() {
-                        },
-                        onComplete: function(request) {
-                            
-                           console.log("ok");
-                            alert("ok");
-                            //alert(this.header('Content-type'));
-                            //if(this.header('Content-type') == "application/json"){
-                                alert("json");
-                            
-                            var foods = request.responseText.evalJSON();
-                            console.log(foods);
-                            alert(foods);
-                        //}
-                        } , // onSuccess
-                        onFailure: function(){
-                        }
-                    }
-                );
-                };
-        </script>
-
-
         <title>Page d'association wine-food</title>
     </head>
     <body>
-      
-       
         <div id="wine">
-        
+
             <h1>WINE</h1>
             <div id="search">
                 <h2>recherche</h2>
@@ -146,7 +118,7 @@
 
 
 
-            <div id="gg">
+            <div id="gg" >
                 <h3>résultat</h3> 
                 <%
                     if (!(winesTotal == null)) {
@@ -158,7 +130,7 @@
 
                     <%for (String mapKey : winesTotal.keySet()) {
 
-                            out.println("<tr><td><input type=\"button\" id=\"buttonWineResponse\"  onclick=\"getSearchWine('"+ mapKey +"','"+ winesTotal.get(mapKey)[0]+ "','"+ winesTotal.get(mapKey)[1]+"','"+ winesTotal.get(mapKey)[2]+"');\" value=\""+winesTotal.get(mapKey)[0]+"\" /></td></tr>");
+                            out.println("<tr><td><input type=\"button\" id=\"buttonWineResponse\"  onclick=\"getSearchWine('" + mapKey + "','" + winesTotal.get(mapKey)[0] + "','" + winesTotal.get(mapKey)[1] + "','" + winesTotal.get(mapKey)[2] + "');\" value=\"" + winesTotal.get(mapKey)[0] + "\" /></td></tr>");
 
 
                         }%>
@@ -167,15 +139,15 @@
                 <%}%>  
 
             </div>
-            <div id="gd">
+            <div id="gd" class="hide">
                 <table>
                     <tr><td><img id="imageVin" src=""/></td></tr>
                     <tr><td>Nom du vin</td></tr>
                     <tr><td><input type="text" id="name" value="" disabled="disabled" size="35"></td></tr>
                     <tr><td>Region</td></tr>
                     <tr><td><input type="text" id="nameRegion" value="" disabled="disabled" size="35"></td></tr>
-                    
-                    
+
+
                 </table>  
             </div>
 
@@ -193,24 +165,28 @@
             <h1>FOOD</h1>
             <div id="search">
                 <form action="ServletWineFood" method="post">
-                <h2>recherche</h2>
-                <input type ="text" name="rechercheFood" id="rechercheFood" value=""/>
-                <input type="submit" value="Rechercher"/>
-                <input type="hidden" name="action" value="rechercheFood"/>
+                    <h2>recherche</h2>
+                    <input type ="text" name="rechercheFood" id="rechercheFood" value=""/>
+                    <input type="submit" value="Rechercher"/>
+                    <input type="hidden" name="action" value="rechercheFood"/>
                 </form>
             </div>
 
 
             <div id="dg">
-                <h3>sélection</h3>  
+                <h3>sélection</h3>
+                <div id="photo"></div>
+                <div id="title"></div>
+                </br>
+                <div class="hide" id="hide"><label>Note des internautes: </label><div id="rating"></div></div>
             </div>
             <div id="dd">
                 <h3>résultat</h3>
-                <div >
-                    <ul id="field_champ"><li><%= foodList %></li></ul>
+                <div id="field_champ" name ="field_champ">
+
                 </div>
             </div>
         </div>
-
+        <script type="text/javascript" src="http://api.punchfork.com/recipes?key=3f748f947e84fcda&q=<%=foodList%>&count=5&jsonp=getSearchFood"></script>
     </body>
 </html>

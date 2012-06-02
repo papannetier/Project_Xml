@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<associations>
+    <association id="1">
+        <wine>
+            <name>Chateau Coutet</name>
+            <region>Sauterne/Barsac</region>
+            <annee>2005</annee>
+        </wine>
+        <food>
+            <title>Torchon de Foie Gras Seasoning Ratio</title>
+            <rating>54.8994</rating>
+            <img>http://img.punchfork.net/643cb03ccd4c2d396596275e83ac723f_250x250.jpg</img>
+        </food>
+    </association>
+</associations>
