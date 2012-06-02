@@ -139,17 +139,21 @@ public class ServletWineFood extends HttpServlet {
             //out.println("<ul>");
             NodeList wines = xml.getElementsByTagName("Product");
 
+                      
+            
+            
             for (int i = 0; i < wines.getLength(); i++) {
                 wine = (Element) wines.item(i);
                 
                 String id = (String) wine.getFirstChild().getTextContent();
                 String name = (String) wine.getFirstChild().getNextSibling().getTextContent();
                 String nameRegion = (String) wine.getFirstChild().getNextSibling().getNextSibling().getNextSibling().getLastChild().getFirstChild().getNextSibling().getTextContent();
-                
+                String image = (String) wine.getFirstChild().getNextSibling().getNextSibling().getNextSibling().getNextSibling().getLastChild().getLastChild().getTextContent();
                 attributsProduit= new String [10];
                 
                 attributsProduit[0]=name;
-                attributsProduit[1]=nameRegion;          
+                attributsProduit[1]=nameRegion;  
+                attributsProduit[2]=image;
                 
                 winesTotal.put(id, attributsProduit);
                 
@@ -157,6 +161,8 @@ public class ServletWineFood extends HttpServlet {
 
             }
 
+            
+            
 
             //out.println("</ul>");
         } catch (ResourceException exc) {
