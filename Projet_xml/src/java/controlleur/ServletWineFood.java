@@ -15,6 +15,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
@@ -156,8 +157,6 @@ public class ServletWineFood extends HttpServlet {
 
             }
 
-            System.out.println(winesTotal.get("99956")[0]);
-             System.out.println(winesTotal.get("109970")[0]);
 
             //out.println("</ul>");
         } catch (ResourceException exc) {
@@ -170,8 +169,8 @@ public class ServletWineFood extends HttpServlet {
              * resource.getResponseEntity().getText());
              */
         }
-
-        request.setAttribute("winesTotal", winesTotal);
+        HttpSession session = request.getSession();
+        session.setAttribute("winesTotal", winesTotal);
         getServletContext().getRequestDispatcher("/vues/creation.jsp").forward(request, response);
 
     }

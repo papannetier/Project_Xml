@@ -13,8 +13,9 @@
 <%
     HashMap<String, String []> winesTotal = null;
     String foodList= null;
-    winesTotal = (HashMap<String, String []>) request.getAttribute("winesTotal");
+    winesTotal = (HashMap<String, String []>) session.getAttribute("winesTotal");
     foodList=(String) request.getAttribute("foodList");
+
 
 %>
 <!DOCTYPE html>
@@ -41,13 +42,12 @@
             
         
         
-            function getSearchWine(id,tab){
-                var searchWine= document.getElementById("rechercheWine").value;
-                
+            function getSearchWine(id,name,nameRegion){
+                                
                 var id=id;
-                var name=tab[0];
-                var nameRegion=tab[1];
-            
+                var name=name;
+                var nameRegion=nameRegion;
+
                 //var url="http://services.wine.com/api/beta/service.svc/xml/catalog?offset=0&size=1&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search="+searchWine;
                 var url="ServletReponseAJAX?id=" + escape(id) +"&name=" + escape(name)+"&nameRegion="+ escape(nameRegion);            
                 requete.open("GET",url,true);
@@ -58,14 +58,20 @@
                 //alert(requete.readyState);
                 //alert(requete.status);
                 if (requete.readyState == 4){
-                    alert(requete.responseText);
+                    var attributs= requete.responseText;
+                    var tabAttributs=attributs.split(",");
+
+                    document.getElementById("name").value=tabAttributs[0];
+                    document.getElementById("nameRegion").value=tabAttributs[1];
+                    
                 }
+            }
 
         </script>
         <script type="text/javascript" >
             function getSearchFood(data) {
               
-
+                
                 var sfo = data.recipes;
                 var tab = new Array();
                 for (var i=0, j=data.count;i<j;i++){
@@ -136,20 +142,29 @@
                 <h3>résultat</h3> 
                 <%
                     if (!(winesTotal == null)) {
-                %><table>
+                %>
+                <table>
                     <tr>
                         <th>Nom des vins </th>
                     </tr>
 
                     <%for (String mapKey : winesTotal.keySet()) {
-                            out.println("<tr><td onclick='getSearchWine("+ mapKey +","+ winesTotal.get(mapKey) + ")'>" + winesTotal.get(mapKey)[0] + "</td></tr>");
+                            out.println("<tr><td><input type=\"button\" id=\"buttonWineResponse\"  onclick=\"getSearchWine('"+ mapKey +"','"+ winesTotal.get(mapKey)[0]+ "','"+ winesTotal.get(mapKey)[1]+ "');\" value=\""+winesTotal.get(mapKey)[0]+"\" /></td></tr>");
                         }%>
+
                 </table>
                 <%}%>  
 
             </div>
             <div id="gd">
-                <h3>sélection</h3>   
+                <table>
+                    <tr><td>Nom du vin</td></tr>
+                    <tr><td><input type="text" id="name" value="" disabled="disabled" size="35"></td></tr>
+                    <tr><td>Region</td></tr>
+                    <tr><td><input type="text" id="nameRegion" value="" disabled="disabled" size="35"></td></tr>
+                    
+                    
+                </table>  
             </div>
 
         </div>

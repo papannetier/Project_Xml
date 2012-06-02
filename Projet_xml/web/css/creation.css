@@ -60,3 +60,7 @@ root {
    float:left;
    background-color: pink;
 }
+
+#buttonWineResponse{
+    width: 250px;
+}

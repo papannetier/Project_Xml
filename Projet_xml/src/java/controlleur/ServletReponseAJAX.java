@@ -72,7 +72,7 @@ public class ServletReponseAJAX extends HttpServlet {
         response.setContentType("text/xml");
         response.setHeader("Cache-Control", "no-cache");
 
-        String todo=id+" "+name+" "+nameRegion;
+        String todo=name+","+nameRegion;
         response.getWriter().write(todo);
     }
 
