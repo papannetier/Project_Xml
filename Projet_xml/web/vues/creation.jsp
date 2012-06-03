@@ -42,18 +42,19 @@
             
         
         
-            function getSearchWine(id,name,nameRegion,imageVin){
+            function getSearchWine(id,name,nameRegion,imageVin,prix){
                 
                                 
                 var id=id;
                 var name=name;
                 var nameRegion=nameRegion;
                 var imageVin=imageVin;
+                var prix=prix;
                 
                 
 
                 //var url="http://services.wine.com/api/beta/service.svc/xml/catalog?offset=0&size=1&apikey=2b5f9a2b3c37bafcc6247efccab5030b&search="+searchWine;
-                var url="ServletReponseAJAX?id=" + escape(id) +"&name=" + escape(name)+"&nameRegion="+ escape(nameRegion)+"&imageVin="+ escape(imageVin);            
+                var url="ServletReponseAJAX?id=" + escape(id) +"&name=" + escape(name)+"&nameRegion="+ escape(nameRegion)+"&imageVin="+ escape(imageVin)+"&prix="+ escape(prix);            
                 requete.open("GET",url,true);
                 requete.onreadystatechange=actualiserPage;
                 requete.send(null);
@@ -69,6 +70,7 @@
                     document.getElementById("nameRegion").value=tabAttributs[1];
                     
                     document.getElementById("imageVin").setAttribute("src",tabAttributs[2]);
+                    document.getElementById("prix").value=tabAttributs[3];
                     document.getElementById("gd").style.display = "block";
                     
                 }
@@ -130,7 +132,7 @@
 
                     <%for (String mapKey : winesTotal.keySet()) {
 
-                            out.println("<tr><td><input type=\"button\" id=\"buttonWineResponse\"  onclick=\"getSearchWine('" + mapKey + "','" + winesTotal.get(mapKey)[0] + "','" + winesTotal.get(mapKey)[1] + "','" + winesTotal.get(mapKey)[2] + "');\" value=\"" + winesTotal.get(mapKey)[0] + "\" /></td></tr>");
+                            out.println("<tr><td><input type=\"button\" id=\"buttonWineResponse\"  onclick=\"getSearchWine('" + mapKey + "','" + winesTotal.get(mapKey)[0] + "','" + winesTotal.get(mapKey)[1] + "','" + winesTotal.get(mapKey)[2] + "','" + winesTotal.get(mapKey)[3] + "');\" value=\"" + winesTotal.get(mapKey)[0] + "\" /></td></tr>");
 
 
                         }%>
@@ -146,6 +148,8 @@
                     <tr><td><input type="text" id="name" value="" disabled="disabled" size="35"></td></tr>
                     <tr><td>Region</td></tr>
                     <tr><td><input type="text" id="nameRegion" value="" disabled="disabled" size="35"></td></tr>
+                    <tr><td>Prix</td></tr>
+                    <tr><td><input type="text" id="prix" value="" disabled="disabled" size="35"></td></tr>
 
 
                 </table>  
@@ -182,7 +186,7 @@
             </div>
             <div id="dd">
                 <h3>résultat</h3>
-                <div id="field_champ" name ="field_champ">
+                <div id="field_champ">
 
                 </div>
             </div>

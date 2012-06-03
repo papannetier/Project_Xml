@@ -149,11 +149,15 @@ public class ServletWineFood extends HttpServlet {
                 String name = (String) wine.getFirstChild().getNextSibling().getTextContent();
                 String nameRegion = (String) wine.getFirstChild().getNextSibling().getNextSibling().getNextSibling().getLastChild().getFirstChild().getNextSibling().getTextContent();
                 String image = (String) wine.getFirstChild().getNextSibling().getNextSibling().getNextSibling().getNextSibling().getLastChild().getLastChild().getTextContent();
+                String prix = (String) wine.getLastChild().getPreviousSibling().getPreviousSibling().getPreviousSibling().getPreviousSibling().getTextContent();
+                
                 attributsProduit= new String [10];
                 
                 attributsProduit[0]=name;
                 attributsProduit[1]=nameRegion;  
                 attributsProduit[2]=image;
+                attributsProduit[3]=prix;
+                
                 
                 winesTotal.put(id, attributsProduit);
                 

@@ -65,14 +65,18 @@ public class ServletReponseAJAX extends HttpServlet {
         String id =null;
         String name=null;
         String nameRegion=null;
+        String imageVin=null;
+        String prix=null;
         id = request.getParameter("id");
         name = request.getParameter("name");
         nameRegion = request.getParameter("nameRegion");
+        imageVin= request.getParameter("imageVin");
+        prix= request.getParameter("prix");
         
         response.setContentType("text/xml");
         response.setHeader("Cache-Control", "no-cache");
 
-        String todo=name+","+nameRegion;
+        String todo=name+","+nameRegion+","+imageVin+","+prix+" $";
         response.getWriter().write(todo);
     }
 
