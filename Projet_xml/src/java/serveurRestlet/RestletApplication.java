@@ -24,11 +24,12 @@ public class RestletApplication extends Application {
   public synchronized Restlet createInboundRoot() {
       
     Router router = new Router(getContext());
+     System.out.println("suce");
     //router.attach("/produits/{id}", ProduitResource.class);
     router.attach("/associations/{idAssociation}", CommandeResource.class);
     // Gerer les exceptions a notre facon
     //router.getApplication().setStatusService(new MyStatusService());
-    System.out.println("suce");
+   
     
     
     

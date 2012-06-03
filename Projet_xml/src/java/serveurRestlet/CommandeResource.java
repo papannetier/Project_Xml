@@ -98,7 +98,7 @@ public class CommandeResource extends ServerResource {
     //else {
       // Recuperer la commande
       AssociationBO associationBO=new AssociationBO();
-      association = associationBO.getById(idAssociation);
+      //association = associationBO.getById(idAssociation);
       if (association == null) {
         throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
       }

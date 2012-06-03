@@ -12,14 +12,14 @@
         <servlet-name>ServletReponseAJAX</servlet-name>
         <servlet-class>controlleur.ServletReponseAJAX</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>serveurRestlet</servlet-name>
-        <servlet-class>controlleur.serveurRestlet</servlet-class>
-        <init-param> 
-        <param-name>org.restlet.application</param-name>
-        <param-value>serveurRestlet.RestletApplication</param-value> 
+<!--    <servlet>
+        <servlet-name>ServeurRestlet</servlet-name>
+        <servlet-class>controlleur.ServeurRestlet</servlet-class>
+        <init-param>
+            <param-name>org.restlet.application</param-name>
+            <param-value>serveurRestlet.RestletApplication</param-value>
         </init-param>
-    </servlet>
+    </servlet>-->
     <servlet-mapping>
         <servlet-name>ServletWineFood</servlet-name>
         <url-pattern>/ServletWineFood</url-pattern>
@@ -28,10 +28,27 @@
         <servlet-name>ServletReponseAJAX</servlet-name>
         <url-pattern>/ServletReponseAJAX</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>serveurRestlet</servlet-name>
+<!--    <servlet-mapping>
+        <servlet-name>ServeurRestlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
+       <!-- Restlet adapter -->  
+   <servlet>  
+      <servlet-name>RestletServlet</servlet-name>  
+      <servlet-class>  
+         org.restlet.ext.servlet.ServerServlet  
+      </servlet-class>
+             <init-param>
+            <param-name>org.restlet.application</param-name>
+            <param-value>serveurRestlet.RestletApplication</param-value>
+        </init-param>
+   </servlet>  
+  
+   <!-- Catch all requests -->  
+   <servlet-mapping>  
+      <servlet-name>RestletServlet</servlet-name>  
+      <url-pattern>/rest/*</url-pattern>  
+   </servlet-mapping> 
     <session-config>
         <session-timeout>
             30

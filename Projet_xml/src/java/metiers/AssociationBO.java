@@ -23,8 +23,8 @@ public class AssociationBO {
 
     }
 
-    public WineFood getById(Integer id) throws SQLException {
-        return wineFoodDAO.findById(id);
-    }
+//    public WineFood getById(Integer id) throws SQLException {
+//        return wineFoodDAO.findById(id);
+//    }
     
 }
