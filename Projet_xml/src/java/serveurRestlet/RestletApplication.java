@@ -1,3 +1,4 @@
+package serveurRestlet;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -21,11 +22,17 @@ import org.restlet.routing.Router;
 public class RestletApplication extends Application {
   @Override
   public synchronized Restlet createInboundRoot() {
+      
     Router router = new Router(getContext());
     //router.attach("/produits/{id}", ProduitResource.class);
-    router.attach("/association/{idAssociation}", CommandeResource.class);
+    router.attach("/associations/{idAssociation}", CommandeResource.class);
     // Gerer les exceptions a notre facon
     //router.getApplication().setStatusService(new MyStatusService());
+    System.out.println("suce");
+    
+    
+    
+    
     return router;
   }
 }
